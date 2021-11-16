@@ -27,14 +27,20 @@ tracker = Tracker(metric)
 
 trk_clr = (255, 255, 255)
 
+
 def load_action_premodel(model):
     return load_model(model)
 
+
 def framewise_recognize(pose, pretrained_model):
+    walking = 0
+    standing = 0
+    operate = 0
+    falldown = 0
     dangerous = 0
     frame, joints, bboxes, xcenter = pose[0], pose[1], pose[2], pose[3]
     joints_norm_per_frame = np.array(pose[-1])
-    #print("pose[-1]:", joints_norm_per_frame)
+    # print("pose[-1]:", joints_norm_per_frame)
 
     if bboxes:
         bboxes = np.array(bboxes)
@@ -43,16 +49,13 @@ def framewise_recognize(pose, pretrained_model):
         # score to 1.0 here).
         detections = [Detection(bbox, 1.0, feature) for bbox, feature in zip(bboxes, features)]
 
-
         boxes = np.array([d.tlwh for d in detections])
         scores = np.array([d.confidence for d in detections])
         indices = preprocessing.non_max_suppression(boxes, nms_max_overlap, scores)
         detections = [detections[i] for i in indices]
 
-
         tracker.predict()
         tracker.update(detections)
-
 
         trk_result = []
         for trk in tracker.tracks:
@@ -61,8 +64,8 @@ def framewise_recognize(pose, pretrained_model):
             bbox = trk.to_tlwh()
             trk_result.append([bbox[0], bbox[1], bbox[2], bbox[3], trk.track_id])
 
-            #trk_id = 'ID-' + str(trk.track_id)
-            #cv.putText(frame, trk_id, (int(bbox[0]), int(bbox[1] - 45)), cv.FONT_HERSHEY_SIMPLEX, 0.8, trk_clr, 3)
+            # trk_id = 'ID-' + str(trk.track_id)
+            # cv.putText(frame, trk_id, (int(bbox[0]), int(bbox[1] - 45)), cv.FONT_HERSHEY_SIMPLEX, 0.8, trk_clr, 3)
 
         for d in trk_result:
             xmin = int(d[0])
@@ -71,24 +74,32 @@ def framewise_recognize(pose, pretrained_model):
             ymax = int(d[3]) + ymin
             # id = int(d[4])
             try:
-                #calculate the xcenter distance between track_box and human
+                # calculate the xcenter distance between track_box and human
                 tmp = np.array([abs(i - (xmax + xmin) / 2.) for i in xcenter])
                 j = np.argmin(tmp)
-                #print("j", j)
+                # print("j", j)
             except:
                 j = 0
 
-
             if joints_norm_per_frame.size > 0:
                 joints_norm_single_person = joints_norm_per_frame[j * 36:(j + 1) * 36]
-                #print(joints_norm_single_person)
+                # print(joints_norm_single_person)
                 joints_norm_single_person = np.array(joints_norm_single_person).reshape(-1, 36)
-                pred = np.argmax(pretrained_model.predict(joints_norm_single_person,None))
+                pred = np.argmax(pretrained_model.predict(joints_norm_single_person, None))
                 init_label = Actions(pred).name
+
+                if init_label == "fall_down":
+                    falldown += 1
+                elif init_label == "walk":
+                    walking += 1
+                elif init_label == "stand":
+                    standing += 1
+                else:
+                    operate += 1
 
                 cv.putText(frame, init_label, (xmin + 80, ymin - 45), cv.FONT_HERSHEY_SIMPLEX, 1, trk_clr, 3)
 
-                if init_label == 'fall':
+                if init_label == 'fall_down':
                     cv.putText(frame, 'WARNING: someone is falling down!', (20, 60), cv.FONT_HERSHEY_SIMPLEX,
                                1.5, (0, 0, 255), 4)
                     dangerous = 1
@@ -97,4 +108,4 @@ def framewise_recognize(pose, pretrained_model):
 
             cv.rectangle(frame, (xmin - 10, ymin - 30), (xmax + 10, ymax), trk_clr, 2)
 
-    return dangerous
+    return falldown, walking, standing, operate, dangerous
