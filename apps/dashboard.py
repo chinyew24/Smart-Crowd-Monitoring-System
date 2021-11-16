@@ -11,10 +11,17 @@ import datetime
 import wget
 import time
 import pandas as pd
+import telepot
 
 def app():
 
-    fps_time = 0
+    # Telegram
+    token = '2126931721:AAGC-pJ7w4f3vgzYC3ETM78wy7ItNaLEBBY'
+    chat_id = -770638523
+    bot = telepot.Bot(token)
+
+    fps_time = 0    
+    frame_count = 0
     chart = 1
     run = 1
 
@@ -67,6 +74,11 @@ def app():
         image_placeholder = st.empty()
         audio_placeholder = st.empty()
 
+        # create local directory
+        new_folder = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        new_path = "output_frame/" + new_folder
+        os.makedirs(new_path)
+
         # loop for each frames from video stream
         while True:
             # read next frame from file
@@ -76,7 +88,7 @@ def app():
                 break
 
             # resize frame
-            frame = imutils.resize(frame, width=700, height=720)
+            frame = imutils.resize(frame, width=700, height=373)
             results = detect_people(frame, net, ln, MIN_CONF, NMS_THRESH,
                                     personIdx=LABELS.index("person"))
 
@@ -154,19 +166,33 @@ def app():
 
             # alert sound (run once in a minute)
             curr_time = int(time.time())
+            buffer_time = 60 
 
             if(run == 1):
-                last_time = int(time.time())
-                run = 0 
+                last_time = curr_time - (buffer_time+1)
 
-            if(curr_time - last_time > 60):
+
+            if(curr_time - last_time > buffer_time):
                 if(int(len(results)) > maxPerson):
                     audio_placeholder.write("""
                     <iframe src="https://www.soundjay.com/buttons/sounds/beep-01a.mp3" allow="autoplay" id="audio" style="display: none"></iframe>
                     """, unsafe_allow_html=True)
                     last_time = int(time.time())
-                    time.sleep(1.5)
+                    file_path = new_path + "/frame " + str(frame_count) + ".jpg"
+                    cv2.imwrite(file_path,frame)
+                    # Dashboard warning notification
+                    if(run==1):
+                        st.subheader('Notification')
+                    st.warning('Crowd Detected \n Time: ' + str(datet) + '\nPerson count: ' + str(len(results)))
+                    # Send notification on Telegram
+                    bot.sendPhoto(chat_id, photo=open(file_path,'rb'),caption='🚨 *CROWD DETECTED* 🚨 \n Video: ' + str(option) + ' \n Time: ' + str(datet) + ' \n Max person allowed: ' + str(maxPerson) + ' \n Current person count: ' + str(len(results)), parse_mode='Markdown')
                     audio_placeholder.empty()
+                    run = 0 
+
+    
+            frame_count += 1
+
+
 
 
         
