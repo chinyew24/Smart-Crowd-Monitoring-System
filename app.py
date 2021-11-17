@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 from multiapp import MultiApp
-from apps import home, dashboard, notification #import modules
+from apps import home, dashboard_social_distancing, dashboard_action_recognition #import modules
 
 app = MultiApp()
 
@@ -32,8 +32,8 @@ with col2:
 
   # Add all your application here
   app.add_app("Home", home.app)
-  app.add_app("Dashboard", dashboard.app)
-  app.add_app("Notification", notification.app)
+  app.add_app("Social Distancing Detector", dashboard_social_distancing.app)
+  app.add_app("Human Action Recognition Detector", dashboard_action_recognition.app)
   # The main app
   app.run()
 
