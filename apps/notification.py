@@ -84,7 +84,7 @@ def app():
 
             nice = framewise_recognize(pose, action_classifier)
             continue_frame += nice[-1]
-            print(continue_frame)
+            #print(continue_frame)
             datet = str(datetime.datetime.now())
             no_people = len(humans)
             cv2.putText(image,
@@ -99,7 +99,7 @@ def app():
             display = 1
             if display > 0:
                 image_placeholder.image(
-                    image, caption='Live Social Distancing Monitor Running..!', channels="BGR")
+                    image, channels="BGR")
                 fps_time = time.time()
             if writer is not None:
                 writer.write(image)
