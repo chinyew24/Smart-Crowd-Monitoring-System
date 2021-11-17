@@ -29,12 +29,12 @@ def app():
 
     MIN_CONF = st.slider(
         'Minimum probability to filter Weak Detections', 0.0, 1.0, 0.3)
-    NMS_THRESH = st.slider('Non-maxima suppression Threshold', 0.0, 1.0, 0.3)
+    NMS_THRESH = st.slider('Non-maxima suppression threshold', 0.0, 1.0, 0.3)
 
     st.subheader('Select a video')
     option = st.selectbox('Choose your option',
-                          ('Demo1', 'Demo2', 'Live Detection'))
-    maxPerson = st.number_input('Maximum number of person allowed', 5, 30, 20)
+                          ('Demo1', 'Demo2','Demo3','Demo4','Live Detection'))
+    maxPerson = st.number_input('Maximum number of person allowed', 5, 50, 20)
 
     MIN_CONF = float(MIN_CONF)
     NMS_THRESH = float(NMS_THRESH)
@@ -64,10 +64,14 @@ def app():
 
     if st.button('Start'):
 
-        if option == "Demo1":
-            vs = cv2.VideoCapture("demo_video/demo3.mp4")
-        elif option == "Demo2":
-            vs = cv2.VideoCapture("demo_video/pedestrians.mp4")
+        if option == "Outdoor1":
+            vs = cv2.VideoCapture("demo_video/Outdoor1.mp4")
+        elif option == "Outdoor2":
+            vs = cv2.VideoCapture("demo_video/Outdoor2.mp4")
+        elif option == "Indoor1":
+            vs = cv2.VideoCapture("demo_video/Indoor1.mp4")
+        elif option == "Indoor2":
+            vs = cv2.VideoCapture("demo_video/Indoor2.mp4")
         else:
             vs = cv2.VideoCapture(0)
 
@@ -88,7 +92,7 @@ def app():
                 break
 
             # resize frame
-            frame = imutils.resize(frame, width=700, height=373)
+            frame = imutils.resize(frame, width=700)
             results = detect_people(frame, net, ln, MIN_CONF, NMS_THRESH,
                                     personIdx=LABELS.index("person"))
 
