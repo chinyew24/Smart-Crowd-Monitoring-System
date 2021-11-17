@@ -64,13 +64,13 @@ def app():
 
     if st.button('Start'):
 
-        if option == "Outdoor1":
+        if option == "Demo1":
             vs = cv2.VideoCapture("demo_video/Outdoor1.mp4")
-        elif option == "Outdoor2":
+        elif option == "Demo2":
             vs = cv2.VideoCapture("demo_video/Outdoor2.mp4")
-        elif option == "Indoor1":
+        elif option == "Demo3":
             vs = cv2.VideoCapture("demo_video/Indoor1.mp4")
-        elif option == "Indoor2":
+        elif option == "Demo4":
             vs = cv2.VideoCapture("demo_video/Indoor2.mp4")
         else:
             vs = cv2.VideoCapture(0)
