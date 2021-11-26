@@ -160,17 +160,22 @@ def app():
             # output chart
             if chart > 0:
                 st.subheader('Chart')
-                linechart = st.line_chart()
+                linechart_violate = st.line_chart()
+                linechart_crowd = st.line_chart()
                 chart = 0
 
             # write data into chart
             violate_num = [int(len(violate))]
             df = pd.DataFrame(violate_num, columns=['Number of violations'])
-            linechart.add_rows(df)
+            linechart_violate.add_rows(df)
+
+            crowd_num = [int(len(results))]
+            df = pd.DataFrame(crowd_num, columns=['Number of people count'])
+            linechart_crowd.add_rows(df)
 
             # alert sound (run once in a minute)
             curr_time = int(time.time())
-            buffer_time = 60 
+            buffer_time = 30 
 
             if(run == 1):
                 last_time = curr_time - (buffer_time+1)
