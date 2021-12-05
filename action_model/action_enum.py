@@ -7,7 +7,7 @@ class Actions(Enum):
     """
     stand = 0
     walk = 1
-    operate = 2
+    wave = 2
     fall_down = 3
 
     # fall = 0

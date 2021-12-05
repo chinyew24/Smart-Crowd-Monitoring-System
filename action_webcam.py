@@ -10,16 +10,16 @@ from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 from tracking_human import framewise_recognize, load_action_premodel
 fps_time = 0
-action_classifier = load_action_premodel('action_model/framewise_recognition_under_scene.h5')
+action_classifier = load_action_premodel('action_model/action_new.h5')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation realtime webcam')
-    parser.add_argument('--camera', type=str, default="video/video.avi")
+    parser.add_argument('--camera', type=str, default="demo_video/fall.mp4")
 
-    parser.add_argument('--resize', type=str, default='432x368',
+    parser.add_argument('--resize', type=str, default='656x368',
                         help='if provided, resize images before they are processed. default=0x0, Recommends : 432x368 or 656x368 or 1312x736 ')
     parser.add_argument('--resize-out-ratio', type=float, default=4.0,
                         help='if provided, resize heatmaps before they are post-processed. default=1.0')
-    parser.add_argument('--model', type=str, default='mobilenet_thin',
+    parser.add_argument('--model', type=str, default='cmu',
                         help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
     parser.add_argument('--show-process', type=bool, default=False,
                         help='for debug purpose, if enabled, speed for inference is dropped.')

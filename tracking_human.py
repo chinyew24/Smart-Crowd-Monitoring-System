@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
-import cv2 as cv
+import cv2
 from pathlib import Path
 from deepsort_tracking.deep_sort import preprocessing
 from deepsort_tracking.deep_sort.nn_matching import NearestNeighborDistanceMetric
@@ -83,7 +83,6 @@ def framewise_recognize(pose, pretrained_model):
 
             if joints_norm_per_frame.size > 0:
                 joints_norm_single_person = joints_norm_per_frame[j * 36:(j + 1) * 36]
-                # print(joints_norm_single_person)
                 joints_norm_single_person = np.array(joints_norm_single_person).reshape(-1, 36)
                 pred = np.argmax(pretrained_model.predict(joints_norm_single_person, None))
                 init_label = Actions(pred).name
@@ -97,15 +96,15 @@ def framewise_recognize(pose, pretrained_model):
                 else:
                     operate += 1
 
-                cv.putText(frame, init_label, (xmin + 80, ymin - 45), cv.FONT_HERSHEY_SIMPLEX, 1, trk_clr, 3)
+                cv2.putText(frame, init_label, (xmin + 80, ymin - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, trk_clr, 3)
 
                 if init_label == 'fall_down':
-                    cv.putText(frame, 'WARNING: someone is falling down!', (20, 60), cv.FONT_HERSHEY_SIMPLEX,
+                    cv2.putText(frame, 'WARNING: someone is falling down!', (20, 60), cv2.FONT_HERSHEY_SIMPLEX,
                                1.5, (0, 0, 255), 4)
                     dangerous = 1
                 else:
                     dangerous = 0
 
-            cv.rectangle(frame, (xmin - 10, ymin - 30), (xmax + 10, ymax), trk_clr, 2)
+            cv2.rectangle(frame, (xmin, ymin ), (xmax , ymax), trk_clr, 2)
 
     return falldown, walking, standing, operate, dangerous

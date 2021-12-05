@@ -51,7 +51,6 @@ def app():
         else:
             cam = cv2.VideoCapture(0)
 
-        # cam = cv2.VideoCapture(args.camera)
         cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
@@ -83,6 +82,7 @@ def app():
             pose = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
             nice = framewise_recognize(pose, action_classifier)
+
             continue_frame += nice[-1]
             #print(continue_frame)
             datet = str(datetime.datetime.now())
@@ -104,7 +104,7 @@ def app():
             if writer is not None:
                 writer.write(image)
 
-            # alert sound (run once in a minute)
+            # alert sound
             curr_time = int(time.time())
             buffer_time = 60
             if run == 1:
@@ -113,9 +113,6 @@ def app():
 
             if continue_frame > 2:
                 if (curr_time - last_time > buffer_time):
-                    # audio_placeholder.write("""
-                    #             <iframe src="https://www.soundjay.com/buttons/sounds/beep-01a.mp3" allow="autoplay" id="audio" style="display: none"></iframe>
-                    #             """, unsafe_allow_html=True)
                     last_time = int(time.time())
                     file_path = new_path + "/frame " + str(frame_count) + ".jpg"
                     cv2.imwrite(file_path, image)
@@ -129,14 +126,6 @@ def app():
                             text, datet, actionDetect), files=files)
                 continue_frame = 0
 
-
-
-                    # audio_placeholder.empty()
-
-            # st.write("fall down :", nice[0])
-            # st.write("walking :", nice[1])
-            # st.write("standing :", nice[2])
-            # st.write("operate:", nice[3])
             data = pd.DataFrame({
                 'Action': ['fall down', 'walking', 'standing', 'operate'],
                 'Person': [nice[0], nice[1], nice[2], nice[3]],
@@ -177,23 +166,3 @@ def app():
             linechartforoperate.add_rows(df4)
             linechart.add_rows(dffinal)
 
-        #     placeholder = st.empty()
-        #     with placeholder.container():
-        #         st.write(data)
-        #         st.write(alt.Chart(data).mark_bar().encode(
-        #             x=alt.X('Action', sort=None),
-        #             y='Person',
-        #         ).properties(
-        #             width=600,
-        #             height=200
-        #         ))
-        #     placeholder.empty()
-        # st.write(data)
-        # st.write(alt.Chart(data).mark_bar().encode(
-        #     x=alt.X('Action', sort=None),
-        #     y='Person',
-        # ).properties(
-        #     width=600,
-        #     height=200
-        # ))
-        # image_placeholder.empty()
