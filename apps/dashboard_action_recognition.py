@@ -67,7 +67,7 @@ def app():
 
         # create local directory
         new_folder = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        new_path = "output_action_frame/" + new_folder
+        new_path = "output_frame/" + new_folder
         os.makedirs(new_path)
 
         while True:

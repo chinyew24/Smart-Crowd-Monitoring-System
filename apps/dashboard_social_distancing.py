@@ -173,7 +173,7 @@ def app():
 
             # alert sound (run once in a minute)
             curr_time = int(time.time())
-            buffer_time = 30 
+            buffer_time = 60 
 
             if(run == 1):
                 last_time = curr_time - (buffer_time+1)
