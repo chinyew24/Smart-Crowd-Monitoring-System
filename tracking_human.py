@@ -105,6 +105,6 @@ def framewise_recognize(pose, pretrained_model):
                 else:
                     dangerous = 0
 
-            cv2.rectangle(frame, (xmin, ymin ), (xmax , ymax), trk_clr, 2)
+            cv2.rectangle(frame, (xmin - 10, ymin - 30), (xmax + 10, ymax), trk_clr, 2)
 
     return falldown, walking, standing, operate, dangerous
