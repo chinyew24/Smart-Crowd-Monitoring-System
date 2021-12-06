@@ -19,5 +19,6 @@ tf_pose		: OpenPose library
 yolo-coco	: contain yolo weights and cfg (can be downloaded from here: https://pjreddie.com/media/files/yolov3.weights)
 
 
-If there are an error "No module named '_pafprocess' you need to build c++ library for pafprocess"
+If there are an error called "No module named '_pafprocess' you need to build c++ library for pafprocess"
 Please refer to the video below that start from 2.00 - 3.36 to install swig.
+https://www.youtube.com/watch?v=4FZrE3cmTPA&ab_channel=AugmentedStartups 
