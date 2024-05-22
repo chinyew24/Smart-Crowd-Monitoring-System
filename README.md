@@ -23,6 +23,11 @@ This project is a Social Distancing & Human Action Recognition Detector implemen
 
 • Send real-time notification if abnormal behaviour occurs
 
+## Screenshots
+![image](https://github.com/chinyew24/Smart-Crowd-Monitoring-System/assets/67740279/116a70de-d24d-4e36-8fd4-2f9caadfa693)
+![image](https://github.com/chinyew24/Smart-Crowd-Monitoring-System/assets/67740279/aa64cb66-07cf-4bf1-8a3f-83c4b1736c95)
+![image](https://github.com/chinyew24/Smart-Crowd-Monitoring-System/assets/67740279/612db6e5-0cb8-405b-9675-48c8941339e5)
+
 ## Requirements
 
     You will need the following to run the code:
